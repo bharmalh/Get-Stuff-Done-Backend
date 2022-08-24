@@ -25,7 +25,7 @@ app.get('/', async (request, response) => {
 		.find()
 		.toArray()
 		.then((data) => {
-			db.collection('todos')
+			db.collection('todolist')
 				.countDocuments({ todoDone: false })
 				.then((itemsLeft) => {
 					response.render('index.ejs', {
@@ -33,6 +33,16 @@ app.get('/', async (request, response) => {
 						left: itemsLeft,
 					});
 				});
+		})
+		.catch((error) => console.log(error));
+});
+
+app.post('/addTodo', (request, response) => {
+	db.collection('todolist')
+		.insertOne({ todoItem: request.body.todoItem, completed: true })
+		.then((result) => {
+			console.log('Todo Added');
+			response.redirect('/');
 		})
 		.catch((error) => console.log(error));
 });
